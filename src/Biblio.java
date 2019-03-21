@@ -33,7 +33,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 public class Biblio {
-	public static void imShow(String title, Mat img) { //not very usefull, already in HighGui
+	public static void imShow(String title, Mat img) { //not very useful, already in HighGui
 		MatOfByte matOfByte = new MatOfByte();
 		Imgcodecs.imencode(".png", img, matOfByte);
 		byte[] byteArray = matOfByte.toArray();
@@ -240,9 +240,9 @@ public class Biblio {
 
 
 
-		ArrayList<String> refs = new ArrayList<String>();
+		/*ArrayList<String> refs = new ArrayList<String>();
 		refs.add("ref110.jpg");refs.add("ref30.jpg");refs.add("ref50.jpg");refs.add("ref70.jpg");refs.add("ref90.jpg");
-		refs.add("refdouble.jpg");
+		refs.add("refdouble.jpg");*/
 		for (int c=0;c<contours.size();c++) {
 			MatOfPoint contour = contours.get(c);
 			double contourArea = Imgproc.contourArea(contour);
@@ -259,7 +259,7 @@ public class Biblio {
 					HighGui.imshow("what is this ?", sign);
 					HighGui.waitKey(0);
 				}
-				int i = Biblio.whatIsThisImage(sign, refs,affichage);
+				int i = Biblio.whatIsThisImage(sign, BDD,affichage);
 
 				if (i !=-1)
 					listOfDetected.add(BDD.get(i));
