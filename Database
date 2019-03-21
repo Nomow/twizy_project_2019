@@ -4,6 +4,7 @@ ref70.jpg,70
 ref90.jpg,90
 ref110.jpg,110
 
+// We could use those one too to feed our learning model (they are not used at the moment)
 p1.jpg,70
 p2.jpg,70
 p3.jpg,110
