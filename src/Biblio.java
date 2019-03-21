@@ -33,7 +33,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 public class Biblio {
-	public static void ImShow(String title, Mat img) {
+	public static void imShow(String title, Mat img) { //not very usefull, already in HighGui
 		MatOfByte matOfByte = new MatOfByte();
 		Imgcodecs.imencode(".png", img, matOfByte);
 		byte[] byteArray = matOfByte.toArray();
@@ -54,7 +54,7 @@ public class Biblio {
 		}
 	}
 
-	public static void affich3cannauxtrgb(Mat m,Mat dst) {
+	public static void show3RGBChannel(Mat m,Mat dst) {
 
 		Vector<Mat> channels= new Vector<Mat>();
 		Core.split(m, channels);
@@ -72,12 +72,12 @@ public class Biblio {
 				else chans.add(channels.get(i));
 			}
 			Core.merge(chans, dst);
-			Biblio.ImShow(Integer.toString(i), dst);
+			Biblio.imShow(Integer.toString(i), dst);
 		}
 
 	}
 
-	public static Mat seuillage(Mat m) {
+	public static Mat thresholding(Mat m) {
 
 
 		Mat hsv_image = Mat.zeros(m.size(),m.type());
@@ -95,7 +95,7 @@ public class Biblio {
 
 	}
 
-	public static List<MatOfPoint> DetecterContours(Mat threshold_img) {
+	public static List<MatOfPoint> detectContours(Mat threshold_img) {
 		int tresh = 100;
 		Mat canny_output = new Mat();
 		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
@@ -105,23 +105,9 @@ public class Biblio {
 		return contours;
 	}
 
-	public static Mat[] scaling(Mat imagearescale,Mat imagetailleaatteindre) { //need to verify
-		Mat sObject = new Mat();
-		Imgproc.resize(imagearescale,sObject,imagetailleaatteindre.size());
-		Mat grayObject = new Mat(sObject.rows(),sObject.cols(),sObject.type());
-		Imgproc.cvtColor(sObject, grayObject, Imgproc.COLOR_BGR2GRAY);
-		Core.normalize(grayObject, grayObject, 0 , 255, Core.NORM_MINMAX);
+	
 
-		Mat graySign = new Mat(imagetailleaatteindre.rows(),imagetailleaatteindre.cols(),imagetailleaatteindre.type());
-		Imgproc.cvtColor(imagetailleaatteindre,imagetailleaatteindre,Imgproc.COLOR_BGRA2GRAY);
-		Core.normalize(graySign,graySign,0,255,Core.NORM_MINMAX);
-		Mat[] r = {grayObject,graySign};
-		return r;
-		//Imgproc.resize(object, sObject, sroadSign.size());
-
-	}
-
-	public static double Comparaison(Mat compare,Mat ImComparateur,boolean affichage) { //Rque : va refaire a chaque fois comparateur
+	public static double comparison(Mat compare,Mat ImComparateur,boolean affichage) { //Rque : va refaire a chaque fois comparateur
 
 		/*Mat grisComparateur = new Mat(ImComparateur.rows(), ImComparateur.cols(), ImComparateur.type());
 		Imgproc.cvtColor(ImComparateur, grisComparateur, Imgproc.COLOR_BGRA2GRAY);
@@ -164,7 +150,6 @@ public class Biblio {
 
 		}
 
-		double C = 0.8;
 		double dist =0;
 		for (int i = 0; i < matchs.size(0); i++)
 		{
@@ -206,14 +191,14 @@ public class Biblio {
 
 	}
 
-	public static int quelEstCetteImage(Mat image, ArrayList<String> BDD,boolean affichage) {
+	public static int whatIsThisImage(Mat image, ArrayList<String> BDD,boolean affichage) {
 		double criteremax = 0;
 		int cest = -1;
 		double dist;
 
 		for (int iImage =0; iImage < BDD.size();iImage++) {
 			Mat iBDD = Imgcodecs.imread(BDD.get(iImage));
-			double critere = Comparaison(image,iBDD,affichage);
+			double critere = comparison(image,iBDD,affichage);
 			if (critere > criteremax) {
 				criteremax = critere;
 				cest  = iImage;
@@ -223,10 +208,10 @@ public class Biblio {
 		if (affichage)
 		{
 			if (cest!=-1) {
-				HighGui.imshow("c ' est lui", Imgcodecs.imread(BDD.get(cest)));
+				HighGui.imshow("it's im", Imgcodecs.imread(BDD.get(cest)));
 			}
 			else {
-				HighGui.imshow("c ' est lui", Imgcodecs.imread("artefact.jpg"));
+				HighGui.imshow("just an artifact", Imgcodecs.imread("artefact.jpg"));
 			}
 		}
 
@@ -235,18 +220,18 @@ public class Biblio {
 		return cest;
 	}
 	public static ArrayList<String> templateMatching(Mat imagefilmee, ArrayList<String> BDD,boolean affichage  ){
-		ArrayList<String> ceQuiEstDetecte = new ArrayList<String>();
+		ArrayList<String> listOfDetected = new ArrayList<String>();
 
 
 		Mat hsv_image = Mat.zeros(imagefilmee.size(), imagefilmee.type());
 		Imgproc.cvtColor(imagefilmee, hsv_image,Imgproc.COLOR_BGR2HSV);
-		Mat threshold_img = Biblio.seuillage(hsv_image);
+		Mat threshold_img = Biblio.thresholding(hsv_image);
 		if (affichage) {
 			HighGui.imshow("threshold", threshold_img);
 			HighGui.waitKey(0);
 		}
 
-		List<MatOfPoint> contours = Biblio.DetecterContours(threshold_img);
+		List<MatOfPoint> contours = Biblio.detectContours(threshold_img);
 
 
 		MatOfPoint2f moP2f = new MatOfPoint2f();
@@ -268,16 +253,16 @@ public class Biblio {
 				Rect rect = Imgproc.boundingRect(contour);
 				Imgproc.rectangle(imagefilmee, new Point(rect.x,rect.y),new Point(rect.x+rect.width,rect.y+rect.height), new Scalar(0,255,0));
 				Mat tmp = imagefilmee .submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width);
-				Mat ball = Mat.zeros(tmp.size(), tmp.type());
-				tmp.copyTo(ball);
+				Mat sign = Mat.zeros(tmp.size(), tmp.type());
+				tmp.copyTo(sign);
 				if (affichage) {
-					HighGui.imshow("qui c ' est", ball);
+					HighGui.imshow("what is this ?", sign);
 					HighGui.waitKey(0);
 				}
-				int i = Biblio.quelEstCetteImage(ball, refs,affichage);
+				int i = Biblio.whatIsThisImage(sign, refs,affichage);
 
 				if (i !=-1)
-					ceQuiEstDetecte.add(BDD.get(i));
+					listOfDetected.add(BDD.get(i));
 				else
 					System.out.println("Artefact");
 			}
@@ -286,7 +271,7 @@ public class Biblio {
 
 		}
 
-		return ceQuiEstDetecte;
+		return listOfDetected;
 	}
 
 }
