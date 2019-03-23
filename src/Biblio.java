@@ -219,6 +219,7 @@ public class Biblio {
 
 
 
+
 		for (int c=0;c<contours.size();c++) {
 			MatOfPoint contour = contours.get(c);
 			double contourArea = Imgproc.contourArea(contour);
@@ -237,7 +238,10 @@ public class Biblio {
 					HighGui.imshow("what is this ?", sign);
 					HighGui.waitKey(0);
 				}
+				
+
 				int i = Biblio.whatIsThisImage(sign, iBDDs,descriptorsOfBDD,affichage);
+
 
 				if (i !=-1)
 					listOfDetected.add(labelsBDD.get(i));

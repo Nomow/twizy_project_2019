@@ -10,15 +10,24 @@ import org.opencv.imgcodecs.Imgcodecs;
 
 public class Main {  //in this class , we test the detection of panels in an image with ORB
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		String testedImage = "p4.jpg";
 		Mat m = Imgcodecs.imread(testedImage);
-		ArrayList<String> refs = new ArrayList<String>();
+		
+		// Read all files in folders and subfolders of given paths and return an ArrayList of the files
+		Read_Panels RP = new Read_Panels("Database");
+		for (String s : RP.getListPanel()) {
+			System.out.println(s);
+		}
+		// Useful when we want to feed our Neural Network
+		
+
 		
 		ArrayList<Mat> iBDDs = new ArrayList<Mat>();
 		ArrayList<Mat> listOfDescriptors = new ArrayList<Mat>();
+		ArrayList<String> refs = new ArrayList<String>();
 		
 		refs.add("ref110.jpg");refs.add("ref30.jpg");refs.add("ref50.jpg");refs.add("ref70.jpg");refs.add("ref90.jpg");
 		refs.add("refdouble.jpg");
