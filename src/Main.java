@@ -17,6 +17,7 @@ public class Main {
 		try {
 			Read_Panels RP = new Read_Panels("Database");
 			refs = RP.getListPanel();
+			System.out.println(refs.get(0));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

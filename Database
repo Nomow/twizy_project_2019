@@ -1,8 +1,11 @@
-ref30.jpg,30
-ref50.jpg,50
-ref70.jpg,70
-ref90.jpg,90
-ref110.jpg,110
+FolderOf20,20
+FolderOf30,30
+FolderOf50,50
+FolderOf70,70
+FolderOf80,80
+FolderOf90,90
+FolderOf100,100
+FolderOf110,110
 
 // We could use those one too to feed our learning model (they are not used at the moment)
 p1.jpg,70
