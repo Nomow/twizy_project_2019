@@ -13,7 +13,7 @@ public class Main {  //in this class , we test the detection of panels in an ima
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		String testedImage = "p3.jpg";
+		String testedImage = "00002_00023.jpg";
 		Mat m = Imgcodecs.imread(testedImage);
 		
 		// Read all files in folders and subfolders of given paths and return an ArrayList of the files
@@ -41,7 +41,7 @@ public class Main {  //in this class , we test the detection of panels in an ima
 			detector.detectAndCompute(i, new Mat(), keypoints, descriptors);
 			listOfDescriptors.add(descriptors);
 		}
-		ArrayList<String> sL = Biblio.templateMatching(m,refs,iBDDs,listOfDescriptors,false);
+		ArrayList<String> sL = Biblio.templateMatching(m,refs,iBDDs,listOfDescriptors,true);
 		for (String s : sL) {
 			System.out.println(s);
 			HighGui.imshow("we find in particular" , Imgcodecs.imread(s));
