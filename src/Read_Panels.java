@@ -32,7 +32,7 @@ public class Read_Panels{
 			field = line.split(",");
 			if (field != null) {
 				
-				File[] files = new File("C:\\Users\\guill\\Documents\\GitHub\\twizy_project_2019\\TestFolder\\" + field[0]).listFiles();
+				File[] files = new File("TestFolder\\" + field[0]).listFiles();
 				for (File fl : files) {
 				    if (fl.isFile()) {
 				        listPanel.add(fl.getName());
