@@ -56,13 +56,13 @@ public class TestVideo {
 					e.printStackTrace();
 				}
 				HighGui.imshow("img", img);
-				HighGui.waitKey();
+				HighGui.waitKey((int)((1.0/frameRate)*1000));
 				i++;
 				if (i==frameRate) {
 					i=0;
-					ArrayList<String> sL = Biblio.templateMatching(img,refs,iBDDs,listOfDescriptors,false);
-					for (String s : sL)
-						System.out.println(s);
+					OrbThread oT = new OrbThread(img,refs,iBDDs,listOfDescriptors);
+					Thread th = new Thread(oT);
+					th.start();
 				}
 			}else{
 				System.out.println("erreur donc fin");
