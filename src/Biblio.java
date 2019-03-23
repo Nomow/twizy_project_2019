@@ -135,17 +135,22 @@ public class Biblio {
 		}*/
 
 		double dist =0;
-		for (int i = 0; i < matchs.size(0); i++)
+		int size = matchs.size(0);
+		for (int i = 0; i < size; i++)
 		{
-			double d = matchs.get(i, 0)[3];
-			if (d < 400) {
-				//System.out.println(d);
-				dist += 1/d;
+			double d1 = matchs.get(i, 0)[3];
+			for (int j = 0; j<size;j++) {
+				double d2 = matchs.get(j, 0)[3];
+				if (d1 < 0.75*d2) { 	//using the way to find good matches of the following tutorial:
+					//https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_feature2d/py_matcher/py_matcher.html#matcher
+					//System.out.println(d);
+					dist += 1/d1;
+				}
 			}
 
 
 		}
-		System.out.println(dist);
+		//System.out.println(dist);
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
@@ -213,14 +218,16 @@ public class Biblio {
 
 
 
-		
+
 		for (int c=0;c<contours.size();c++) {
 			MatOfPoint contour = contours.get(c);
 			double contourArea = Imgproc.contourArea(contour);
 			moP2f.fromList(contour.toList());
 			Imgproc.minEnclosingCircle(moP2f, center, radius);
-			if ((contourArea/(Math.PI*radius[0]*radius[0]))>=0.8) {
-				Imgproc.circle(imagefilmee, center, (int)radius[0], new Scalar(0,255,0),2);
+			if ((contourArea/(Math.PI*radius[0]*radius[0]))>=0.5 && (radius[0] >20)) {
+				
+				System.out.println(radius[0]);
+				//Imgproc.circle(imagefilmee, center, (int)radius[0], new Scalar(0,255,0),2);
 				Rect rect = Imgproc.boundingRect(contour);
 				Imgproc.rectangle(imagefilmee, new Point(rect.x,rect.y),new Point(rect.x+rect.width,rect.y+rect.height), new Scalar(0,255,0));
 				Mat tmp = imagefilmee .submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width);

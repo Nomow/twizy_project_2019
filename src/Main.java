@@ -13,7 +13,7 @@ public class Main {  //in this class , we test the detection of panels in an ima
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		String testedImage = "p3.jpg";
+		String testedImage = "p4.jpg";
 		Mat m = Imgcodecs.imread(testedImage);
 		ArrayList<String> refs = new ArrayList<String>();
 		
