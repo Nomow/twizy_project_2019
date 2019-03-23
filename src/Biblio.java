@@ -105,50 +105,34 @@ public class Biblio {
 		return contours;
 	}
 
-	
-
-	public static double comparison(Mat compare,Mat ImComparateur,boolean affichage) { //Rque : va refaire a chaque fois comparateur
-
-		/*Mat grisComparateur = new Mat(ImComparateur.rows(), ImComparateur.cols(), ImComparateur.type());
-		Imgproc.cvtColor(ImComparateur, grisComparateur, Imgproc.COLOR_BGRA2GRAY);
-		Core.normalize(grisComparateur, grisComparateur, 0, 255, Core.NORM_MINMAX);
-		Mat signeNoirEtBlanc=new Mat();
 
 
+	public static double comparison(Mat compare,Mat ImComparateur,Mat descriptorOfComparator,boolean affichage) { //Rque : va refaire a chaque fois comparateur
 
-		//Conversion du panneau extrait de l'image en gris et normalisation et redimensionnement à la taille du panneau de réference
-		Mat grisCompare = new Mat(ImComparateur.rows(), ImComparateur.cols(), ImComparateur.type());
-		Imgproc.resize(compare, compare, grisComparateur.size());
-		//afficheImage("Panneau extrait de l'image",compare);
-		Imgproc.cvtColor(compare, grisCompare, Imgproc.COLOR_BGRA2GRAY);
-		Core.normalize(grisCompare, grisCompare, 0, 255, Core.NORM_MINMAX);
-		//Imgproc.resize(grisCompare, grisCompare, graySign.size());
-		 */
+
 		Imgproc.resize(compare, compare, ImComparateur.size());
 
 
 
 		ORB detector = ORB.create(30);
-		MatOfKeyPoint keypoints1 = new MatOfKeyPoint(),keypoints2 = new MatOfKeyPoint();
-		Mat descriptors1 = new Mat(),descriptors2 =new Mat();
+		MatOfKeyPoint keypoints1 = new MatOfKeyPoint();
+		Mat descriptors1 = new Mat();
 		detector.detectAndCompute(compare, new Mat(), keypoints1, descriptors1);
-		detector.detectAndCompute(ImComparateur, new Mat(), keypoints2, descriptors2);
+		//detector.detectAndCompute(ImComparateur, new Mat(), keypoints2, descriptors2);
 
 		MatOfDMatch matchs = new MatOfDMatch();
 		DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
-		matcher.match(descriptors1, descriptors2, matchs);
-		System.out.println(matchs.dump());
-		//Mat matchedImage = new Mat(ImComparateur.rows(),ImComparateur.cols()*2,ImComparateur.type());
-		//Features2d.drawMatches(compare,keypoints1,ImComparateur,keypoints2,matchs,matchedImage);
+		matcher.match(descriptors1, descriptorOfComparator, matchs);
+		//System.out.println(matchs.dump());
 
-		//matchs.get(row, col)
-		Mat matchedImage = new Mat(ImComparateur.rows(),ImComparateur.cols()*2,ImComparateur.type());
-		Features2d.drawMatches(compare,keypoints1,ImComparateur,keypoints2,matchs,matchedImage);
-		if (affichage) {
+		/*if (affichage) {
+			Mat matchedImage = new Mat(ImComparateur.rows(),ImComparateur.cols()*2,ImComparateur.type());
+			Features2d.drawMatches(compare,keypoints1,ImComparateur,keyComparator,matchs,matchedImage);
+
 			HighGui.imshow("titre", matchedImage);
 			HighGui.waitKey(0);
 
-		}
+		}*/
 
 		double dist =0;
 		for (int i = 0; i < matchs.size(0); i++)
@@ -176,29 +160,18 @@ public class Biblio {
 
 
 
-		//Mat descripteurCompare = new Mat() , descripteurComparateur = new Mat();
-
-		/*MatOfKeyPoint keypointsCompare = new MatOfKeyPoint();
-		detector.detect(grisCompare,keypointsCompare);
-
-		MatOfKeyPoint keypointsComparateur = new MatOfKeyPoint();
-		detector.detect(grisComparateur,keypointsComparateur);
-
-		Features2d.drawKeypoints(grisCompare, keypointsCompare, grisCompare);
-		Features2d.drawKeypoints(grisComparateur, keypointsComparateur, grisComparateur);
-		HighGui.imshow(" Keypoints",grisCompare);
-		HighGui.imshow(" KeypointsComparateur",grisComparateur);*/
 
 	}
 
-	public static int whatIsThisImage(Mat image, ArrayList<String> BDD,boolean affichage) {
+	public static int whatIsThisImage(Mat image, ArrayList<Mat> iBDDs,ArrayList<Mat> descriptorsOfBDD,boolean affichage) {
 		double criteremax = 0;
 		int cest = -1;
 		double dist;
 
-		for (int iImage =0; iImage < BDD.size();iImage++) {
-			Mat iBDD = Imgcodecs.imread(BDD.get(iImage));
-			double critere = comparison(image,iBDD,affichage);
+		for (int iImage =0; iImage < iBDDs.size();iImage++) {
+			Mat iBDD = iBDDs.get(iImage);
+			Mat descriptorOfIBDD = descriptorsOfBDD.get(iImage);
+			double critere = comparison(image,iBDD,descriptorOfIBDD,affichage);
 			if (critere > criteremax) {
 				criteremax = critere;
 				cest  = iImage;
@@ -208,7 +181,7 @@ public class Biblio {
 		if (affichage)
 		{
 			if (cest!=-1) {
-				HighGui.imshow("it's im", Imgcodecs.imread(BDD.get(cest)));
+				HighGui.imshow("it's im", iBDDs.get(cest));
 			}
 			else {
 				HighGui.imshow("just an artifact", Imgcodecs.imread("artefact.jpg"));
@@ -219,7 +192,7 @@ public class Biblio {
 
 		return cest;
 	}
-	public static ArrayList<String> templateMatching(Mat imagefilmee, ArrayList<String> BDD,boolean affichage  ){
+	public static ArrayList<String> templateMatching(Mat imagefilmee,ArrayList<String> labelsBDD, ArrayList<Mat> iBDDs,ArrayList<Mat> descriptorsOfBDD,boolean affichage  ){
 		ArrayList<String> listOfDetected = new ArrayList<String>();
 
 
@@ -240,9 +213,7 @@ public class Biblio {
 
 
 
-		/*ArrayList<String> refs = new ArrayList<String>();
-		refs.add("ref110.jpg");refs.add("ref30.jpg");refs.add("ref50.jpg");refs.add("ref70.jpg");refs.add("ref90.jpg");
-		refs.add("refdouble.jpg");*/
+		
 		for (int c=0;c<contours.size();c++) {
 			MatOfPoint contour = contours.get(c);
 			double contourArea = Imgproc.contourArea(contour);
@@ -259,10 +230,10 @@ public class Biblio {
 					HighGui.imshow("what is this ?", sign);
 					HighGui.waitKey(0);
 				}
-				int i = Biblio.whatIsThisImage(sign, BDD,affichage);
+				int i = Biblio.whatIsThisImage(sign, iBDDs,descriptorsOfBDD,affichage);
 
 				if (i !=-1)
-					listOfDetected.add(BDD.get(i));
+					listOfDetected.add(labelsBDD.get(i));
 				else
 					System.out.println("Artefact");
 			}
