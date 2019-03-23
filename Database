@@ -1,11 +1,14 @@
-FolderOf20,20
-FolderOf30,30
-FolderOf50,50
-FolderOf70,70
-FolderOf80,80
-FolderOf90,90
-FolderOf100,100
-FolderOf110,110
+00000,20
+00001,30
+00002,50
+00003,60
+00004,70
+00005,80
+00006,fin80
+00007,100
+00008,120
+00009,refdouble
+
 
 // We could use those one too to feed our learning model (they are not used at the moment)
 p1.jpg,70

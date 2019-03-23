@@ -56,7 +56,7 @@ public class TestVideo {
 					e.printStackTrace();
 				}
 				HighGui.imshow("img", img);
-				HighGui.waitKey((int)((1.0/frameRate)*1000));
+				HighGui.waitKey((int)((1.0/frameRate)*500));
 				i++;
 				if (i==frameRate) {
 					i=0;
