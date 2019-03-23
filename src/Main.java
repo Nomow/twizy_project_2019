@@ -8,7 +8,7 @@ import org.opencv.features2d.ORB;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 
-public class Main {
+public class Main {  //in this class , we test the detection of panels in an image with ORB
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
