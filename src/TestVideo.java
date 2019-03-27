@@ -65,7 +65,7 @@ public class TestVideo {
 					th.start();
 				}
 			}else{
-				System.out.println("erreur donc fin");
+				System.out.println("end of video");
 				fini = true;
 			}
 			
