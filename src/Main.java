@@ -13,13 +13,19 @@ public class Main {  //in this class , we test the detection of panels in an ima
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		String testedImage = "p3.jpg";
+
+
+		//String testedImage = "00002_00023.ppm";
+
+		String testedImage = "p4.jpg";
+
 		Mat m = Imgcodecs.imread(testedImage);
 		
 		// Read all files in folders and subfolders of given paths and return an ArrayList of the files
 		Read_Panels RP = new Read_Panels("Database");
-		for (String s : RP.getListPanel()) {
-			System.out.println(s);
+		for (int i = 0; i < RP.getInputPanel().size(); i++) {
+			System.out.println(RP.getInputPanel().get(i));
+			System.out.println(RP.getRealPanel().get(i));
 		}
 		// Useful when we want to feed our Neural Network
 		

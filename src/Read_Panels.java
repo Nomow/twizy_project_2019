@@ -11,8 +11,11 @@ public class Read_Panels{
 
 	protected String file;
 
-	protected ArrayList<String> listPanel = new ArrayList<String>();
-	
+	protected ArrayList<String> InputPanel = new ArrayList<String>();
+	protected ArrayList<String> RealPanel = new ArrayList<String>();
+
+
+
 
 	public Read_Panels(String file)  throws IOException {
 
@@ -32,10 +35,11 @@ public class Read_Panels{
 			field = line.split(",");
 			if (field != null) {
 				
-				File[] files = new File("TestFolder\\" + field[0]).listFiles();
+				File[] files = new File("TrainingFolder\\" + field[0]).listFiles();
 				for (File fl : files) {
 				    if (fl.isFile()) {
-				        listPanel.add(fl.getName());
+				        InputPanel.add(fl.getName());
+				        RealPanel.add(field[1]);
 				    }
 				}
 
@@ -47,10 +51,13 @@ public class Read_Panels{
 
 	}
 	
-	public ArrayList<String> getListPanel(){
-		return listPanel;
+	public ArrayList<String> getInputPanel(){
+		return InputPanel;
 	}
 
-	
+	public ArrayList<String> getRealPanel() {
+		return RealPanel;
+	}
+
 
 }
