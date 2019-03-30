@@ -13,6 +13,7 @@ public class Read_Panels{
 
 	protected ArrayList<String> InputPanel = new ArrayList<String>();
 	protected ArrayList<String> RealPanel = new ArrayList<String>();
+	
 
 
 

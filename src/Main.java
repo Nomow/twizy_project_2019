@@ -16,7 +16,7 @@ public class Main {  //in this class , we test the detection of panels in an ima
 
 		//String testedImage = "00002_00023.ppm";
 
-		String testedImage = "p4.jpg";
+		String testedImage = "p8.jpg";
 
 		Mat m = Imgcodecs.imread(testedImage);
 		
@@ -46,7 +46,7 @@ public class Main {  //in this class , we test the detection of panels in an ima
 			detector.detectAndCompute(i, new Mat(), keypoints, descriptors);
 			listOfDescriptors.add(descriptors);
 		}
-		ArrayList<String> sL = Biblio.templateMatching(m,refs,iBDDs,listOfDescriptors,true);
+		ArrayList<String> sL = Biblio.templateMatching(m,refs,iBDDs,listOfDescriptors,false);
 		for (String s : sL) {
 			System.out.println(s);
 			HighGui.imshow("we find in particular" , Imgcodecs.imread(s));
