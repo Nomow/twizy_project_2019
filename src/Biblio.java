@@ -33,26 +33,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 public class Biblio {
-	public static void imShow(String title, Mat img) { //not very useful, already in HighGui
-		MatOfByte matOfByte = new MatOfByte();
-		Imgcodecs.imencode(".png", img, matOfByte);
-		byte[] byteArray = matOfByte.toArray();
-		BufferedImage bufImage = null ;
-
-		try {
-			InputStream in = new ByteArrayInputStream(byteArray);
-			bufImage = ImageIO.read(in);
-
-			JFrame frame = new JFrame();
-			frame.setTitle(title);
-			frame.getContentPane().add(new JLabel(new ImageIcon(bufImage)));
-			frame.pack();
-			frame.setVisible(true);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	public static void show3RGBChannel(Mat m,Mat dst) {
 
@@ -72,13 +53,15 @@ public class Biblio {
 				else chans.add(channels.get(i));
 			}
 			Core.merge(chans, dst);
-			Biblio.imShow(Integer.toString(i), dst);
+			HighGui.imshow(Integer.toString(i), dst);
 		}
 
 	}
 
 	public static Mat thresholding(Mat m) {
-
+		/**Thresholding the image by red.
+		 * 
+		 */
 
 		Mat hsv_image = Mat.zeros(m.size(),m.type());
 		Imgproc.cvtColor(m,hsv_image,Imgproc.COLOR_BGR2HSV);
@@ -108,7 +91,9 @@ public class Biblio {
 
 
 	public static double comparison(Mat compare,Mat ImComparateur,Mat descriptorOfComparator,boolean affichage) { //Rque : va refaire a chaque fois comparateur
-
+		/**return a criteria which describe the similiraty beetween 2 images.
+		 * 
+		 */
 
 		Imgproc.resize(compare, compare, ImComparateur.size());
 
@@ -141,10 +126,10 @@ public class Biblio {
 			double d1 = matchs.get(i, 0)[3];
 			for (int j = 0; j<size;j++) {
 				double d2 = matchs.get(j, 0)[3];
-				if (d1 < 0.75*d2) { 	//using the way to find good matches of the following tutorial:
-					//https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_feature2d/py_matcher/py_matcher.html#matcher
-					//System.out.println(d);
-					dist += 1/d1;
+				if (d1 < 0.75*d2 ) { 	//using the way to find good matches of the following tutorial:
+										//https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_feature2d/py_matcher/py_matcher.html#matcher
+					
+					dist += 1/(d1);
 				}
 			}
 
@@ -169,6 +154,9 @@ public class Biblio {
 	}
 
 	public static int whatIsThisImage(Mat image, ArrayList<Mat> iBDDs,ArrayList<Mat> descriptorsOfBDD,boolean affichage) {
+		/**	return the indice of the panel which looks likes the most to the images, return -1 if it is not a panel.
+		 * 
+		 */
 		double criteremax = 0;
 		int cest = -1;
 		double dist;
@@ -183,6 +171,8 @@ public class Biblio {
 			}
 
 		}
+		if (cest!=-1) 
+			System.out.println("score - "+criteremax);
 		if (affichage)
 		{
 			if (cest!=-1) {
@@ -197,7 +187,11 @@ public class Biblio {
 
 		return cest;
 	}
-	public static ArrayList<String> templateMatching(Mat imagefilmee,ArrayList<String> labelsBDD, ArrayList<Mat> iBDDs,ArrayList<Mat> descriptorsOfBDD,boolean affichage  ){
+	public static ArrayList<String> templateMatching(Mat imagefilmee /**<[in] the image where we want to detect the panels */,ArrayList<String> labelsBDD/**<[in] the labels of the images of the reference-panels */, ArrayList<Mat> iBDDs/**<[in] the reference-panels images */,ArrayList<Mat> descriptorsOfBDD/**<[in] the reference-panels images descriptors */,boolean affichage/**<[in] true if we want to show the intermediate steps */  ){
+		/**	return the list of the detected panels using ORB.
+		 * 
+		 */
+		
 		ArrayList<String> listOfDetected = new ArrayList<String>();
 
 
@@ -205,6 +199,8 @@ public class Biblio {
 		Imgproc.cvtColor(imagefilmee, hsv_image,Imgproc.COLOR_BGR2HSV);
 		Mat threshold_img = Biblio.thresholding(hsv_image);
 		if (affichage) {
+			HighGui.imshow("hsv",hsv_image);
+			HighGui.waitKey(0);
 			HighGui.imshow("threshold", threshold_img);
 			HighGui.waitKey(0);
 		}
@@ -227,7 +223,7 @@ public class Biblio {
 			Imgproc.minEnclosingCircle(moP2f, center, radius);
 			if ((contourArea/(Math.PI*radius[0]*radius[0]))>=0.5 && (radius[0] >20)) {
 				
-				System.out.println(radius[0]);
+				System.out.println("rayon - "+radius[0]);
 				//Imgproc.circle(imagefilmee, center, (int)radius[0], new Scalar(0,255,0),2);
 				Rect rect = Imgproc.boundingRect(contour);
 				Imgproc.rectangle(imagefilmee, new Point(rect.x,rect.y),new Point(rect.x+rect.width,rect.y+rect.height), new Scalar(0,255,0));

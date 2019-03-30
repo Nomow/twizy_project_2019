@@ -14,6 +14,7 @@ public class Main {  //in this class , we test the detection of panels in an ima
 		// TODO Auto-generated method stub
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
+
 		//String testedImage = "00002_00023.ppm";
 
 		String testedImage = "p8.jpg";
