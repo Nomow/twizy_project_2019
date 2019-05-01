@@ -16,20 +16,29 @@ from torchvision import transforms
 from PIL import Image
 import fastai
 
-import argparse
+#import argparse
 print("testpy")
- 
-parser = argparse.ArgumentParser(description='Process some integers.')
-parser.add_argument('integers', metavar='N', type=int, nargs='+',
-help='an integer for the accumulator')
- 
-args = parser.parse_args()
+fichier2 = open(r"C:\Users\alexa\Desktop\twizy_project_2019\temporaryFiles\whenAreWe.txt", "r")
+iApp = fichier2.read()
+fichier2.close()  
+fichier3 = open(r"C:\Users\alexa\Desktop\twizy_project_2019\temporaryFiles\howMany.txt", "r")
+N = int(fichier3.read())
+fichier3.close()
+#N=2
+#iApp=1
+result =[]
 
 
+for i in range(1,N+1):
+    defaults.device = torch.device('cpu')
+    img = open_image(r"C:\Users\alexa\Desktop\twizy_project_2019\temporaryFiles\tempIm"+str(iApp)+"s"+str(i)+".png")
+    learn = load_learner(path =r"C:\Users\alexa\Desktop\twizy_project_2019\Pytorch Folder")
+    pred_class,pred_idx,outputs = learn.predict(img)
+    print(pred_class)
+    result.append(str(pred_class))
+fichier = open(r"C:\Users\alexa\Desktop\twizy_project_2019\temporaryFiles\result"+str(iApp)+".txt", "w")
 
-defaults.device = torch.device('cuda')
-img = open_image(r"C:\Users\alexa\Desktop\twizy_project_2019\temporaryFiles\tempImTe"+args+".png")
-learn = load_learner(path =r"C:\Users\alexa\Desktop\twizy_project_2019\Pytorch Folder")
-pred_class,pred_idx,outputs = learn.predict(img)
-print(pred_class)
+for r in result:
+    fichier.write(str(r)+"\n")
+fichier.close()
 

@@ -1,14 +1,14 @@
 ClassId,SignName
-0,Speed limit (20km/h),N
+0,Speed limit (20km/h),Artefact.jpg
 1,Speed limit (30km/h),ref30.jpg
 2,Speed limit (50km/h),ref50.jpg
-3,Speed limit (60km/h),N
-4,Speed limit (70km/h),N
-5,Speed limit (80km/h),N
-6,End of speed limit (80km/h),N
-7,Speed limit (100km/h),N
-8,Speed limit (120km/h),N
-9,No passing
+3,Speed limit (60km/h),Artefact.jpg
+4,Speed limit (70km/h),Artefact.jpg
+5,Speed limit (80km/h),Artefact.jpg
+6,End of speed limit (80km/h),Artefact.jpg
+7,Speed limit (100km/h),Artefact.jpg
+8,Speed limit (120km/h),Artefact.jpg
+9,No passing,refdouble.jpg
 10,No passing for vehicles over 3.5 metric tons
 11,Right-of-way at the next intersection
 12,Priority road
