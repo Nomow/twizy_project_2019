@@ -255,6 +255,7 @@ public class Biblio {
 		Point center = new Point();
 		short i =0;
 		ArrayList<Mat> signs = getCircles(imageFilmee,true);
+		signs.addAll(getTriangles(imageFilmee,true));
 		for (Mat sign:signs) {
 
 
@@ -305,14 +306,14 @@ public class Biblio {
 		}
 		return refName;
 	}
-	
-	private static BufferedReader getOutput(Process p) {
-        return new BufferedReader(new InputStreamReader(p.getInputStream()));
-    }
 
-    private static BufferedReader getError(Process p) {
-        return new BufferedReader(new InputStreamReader(p.getErrorStream()));
-    }
+	private static BufferedReader getOutput(Process p) {
+		return new BufferedReader(new InputStreamReader(p.getInputStream()));
+	}
+
+	private static BufferedReader getError(Process p) {
+		return new BufferedReader(new InputStreamReader(p.getErrorStream()));
+	}
 
 
 	public static ArrayList<String> neuronesImage(Mat imageFilmee,ArrayList<String[]> tabIndice) throws IOException, InterruptedException{
@@ -323,45 +324,45 @@ public class Biblio {
 
 		ArrayList<String> pannelsFind = new ArrayList<String>();
 		short i = decompositionAndSave(imageFilmee);
-		
+
 		String pythonScriptPath = "Pytorch Folder\\pred.py";
 		String[] cmd = new String[2];
-		
+
 		cmd[0] = "D:\\ProgramData\\Anaconda3\\python"; //very dependant of the computer
 		cmd[1] = pythonScriptPath;
 
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File("TemporaryFiles\\howMany"+Application.iTempFiles+".txt")));
-		
+
 		writer.write(""+i);
 		writer.close();
-		
-		try {
-		// create runtime to execute external command
-		Runtime rt = Runtime.getRuntime();
-		Process p = rt.exec(cmd);
-		BufferedReader output = getOutput(p);
-        BufferedReader error = getError(p);
-		// retrieve output from python script
-		String ligne = "";
-		 while ((ligne = output.readLine()) != null) {
-             System.out.println(ligne);
-         }
-         
-         while ((ligne = error.readLine()) != null) {
-             System.out.println(ligne);
-         }
 
-         p.waitFor();
+		try {
+			// create runtime to execute external command
+			Runtime rt = Runtime.getRuntime();
+			Process p = rt.exec(cmd);
+			BufferedReader output = getOutput(p);
+			BufferedReader error = getError(p);
+			// retrieve output from python script
+			String ligne = "";
+			while ((ligne = output.readLine()) != null) {
+				System.out.println(ligne);
+			}
+
+			while ((ligne = error.readLine()) != null) {
+				System.out.println(ligne);
+			}
+
+			p.waitFor();
 		}
 		catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		/*ProcessBuilder pb = new ProcessBuilder(cmd[0],cmd[1],(String)Application.iTemp);
 		pb.start();
 		Thread.sleep(500);
-		*/
+		 */
 		File f = new File("TemporaryFiles\\result"+Application.iTempFiles+".txt");
 		BufferedReader fR = new BufferedReader(new FileReader(f));
 		String chaine = fR.readLine();
@@ -375,11 +376,11 @@ public class Biblio {
 		}
 		fR.close();
 		int N = resultIndice.size();
-		
-		
-			for (i=0;i<N;i++) {
-				resultIndice.set(i, indiceToRefName(tabIndice,resultIndice.get(i)));
-			}
+
+
+		for (i=0;i<N;i++) {
+			resultIndice.set(i, indiceToRefName(tabIndice,resultIndice.get(i)));
+		}
 
 
 		return resultIndice;
@@ -408,6 +409,65 @@ public class Biblio {
 				//Imgproc.circle(image, center, (int)radius[0], new Scalar(0,255,0),2);
 				Rect rect = Imgproc.boundingRect(contour);
 				int margex=0,margey=0;
+				if (withMarge) {
+					int marge =(int)(0.25*rect.height);
+					int[] longueur = {0,0,0,0};
+					longueur[0] = rect.x;
+					longueur[1] = rect.y;
+					longueur[2] = (int) (image.size().width-(rect.x+rect.width));
+					longueur[3] = (int)(image.size().height-(rect.y+rect.height));
+					int margeMax=min(longueur);
+					System.out.println("max"+margeMax +"|"+marge);
+					if (margeMax<marge)
+					{
+						marge = margeMax;
+						System.out.println("nouvellemarge"+marge);
+					}
+					margex=marge;
+					margey=marge;
+				}
+				//Imgproc.rectangle(image, new Point(rect.x-margex,rect.y-margey),new Point(rect.x+rect.width+margex,rect.y+rect.height+margey), new Scalar(0,255,0));
+				Mat tmp = image.submat(rect.y-margey,rect.y+rect.height+margey,rect.x-margex,rect.x+rect.width+margex); // decouper autour de chaque paneau
+				Mat sign = Mat.zeros(tmp.size(), tmp.type());
+				tmp.copyTo(sign);
+				signFind.add(sign);
+
+
+
+
+			}
+		}
+		return signFind;
+	}
+	public static void detectContoursByShape(List<MatOfPoint> contours, int vertices, double accuracy){
+		MatOfPoint2f matOfPoint2f = new MatOfPoint2f();
+		MatOfPoint2f approxCurve = new MatOfPoint2f();
+
+		for(int idx = contours.size() - 1; idx >= 0; idx--){
+			MatOfPoint contour = contours.get(idx);
+
+			matOfPoint2f.fromList(contour.toList());
+			Imgproc.approxPolyDP(matOfPoint2f, approxCurve, Imgproc.arcLength(matOfPoint2f, true) * accuracy, true);
+			long total = approxCurve.total();
+
+			if (total != vertices)
+				contours.remove(idx);
+		}
+	}
+
+
+
+	public static ArrayList<Mat> getTriangles(Mat image,boolean withMarge){
+		int margex=0,margey=0;
+		ArrayList<Mat> signFind = new ArrayList<Mat>();
+		Mat threshold_img = Biblio.thresholding(image);
+		List<MatOfPoint> contours = Biblio.detectContours(threshold_img);
+		detectContoursByShape(contours,3,0.05);
+		MatOfPoint2f moP2f = new MatOfPoint2f();
+		for (MatOfPoint mOP:contours) {
+			Rect rect = Imgproc.boundingRect(mOP);
+			if (withMarge) {
+
 				int marge =(int)(0.25*rect.height);
 				int[] longueur = {0,0,0,0};
 				longueur[0] = rect.x;
@@ -423,17 +483,13 @@ public class Biblio {
 				}
 				margex=marge;
 				margey=marge;
-
-				//Imgproc.rectangle(image, new Point(rect.x-margex,rect.y-margey),new Point(rect.x+rect.width+margex,rect.y+rect.height+margey), new Scalar(0,255,0));
-				Mat tmp = image.submat(rect.y-margey,rect.y+rect.height+margey,rect.x-margex,rect.x+rect.width+margex); // decouper autour de chaque paneau
-				Mat sign = Mat.zeros(tmp.size(), tmp.type());
-				tmp.copyTo(sign);
-				signFind.add(sign);
-
-
-
-
 			}
+			//Imgproc.rectangle(image, new Point(rect.x-margex,rect.y-margey),new Point(rect.x+rect.width+margex,rect.y+rect.height+margey), new Scalar(0,255,0));
+			Mat tmp = image.submat(rect.y-margey,rect.y+rect.height+margey,rect.x-margex,rect.x+rect.width+margex); // decouper autour de chaque paneau
+			Mat sign = Mat.zeros(tmp.size(), tmp.type());
+			tmp.copyTo(sign);
+			signFind.add(sign);
+
 		}
 		return signFind;
 	}
@@ -445,6 +501,8 @@ public class Biblio {
 				min=i;
 		return min;
 	}
+
+
 
 
 
