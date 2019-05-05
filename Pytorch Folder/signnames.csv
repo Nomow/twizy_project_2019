@@ -9,7 +9,7 @@ ClassId,SignName
 7,Speed limit (100km/h)
 8,Speed limit (120km/h)
 9,No passing,refdouble.jpg
-10,No passing for vehicles over 3.5 metric tons
+10,No passing for vehicles over 3.5 metric tons,refdoubletons.png
 11,Right-of-way at the next intersection
 12,Priority road
 13,Yield
@@ -17,7 +17,7 @@ ClassId,SignName
 15,No vehicles
 16,Vehicles over 3.5 metric tons prohibited
 17,No entry
-18,General caution
+18,General caution,refdanger.png
 19,Dangerous curve to the left
 20,Dangerous curve to the right
 21,Double curve
