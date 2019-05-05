@@ -1,14 +1,14 @@
 ClassId,SignName
 0,Speed limit (20km/h)
-1,Speed limit (30km/h)
-2,Speed limit (50km/h)
+1,Speed limit (30km/h),ref30.jpg
+2,Speed limit (50km/h),ref50.jpg
 3,Speed limit (60km/h)
-4,Speed limit (70km/h)
+4,Speed limit (70km/h),ref70.jpg
 5,Speed limit (80km/h)
 6,End of speed limit (80km/h)
 7,Speed limit (100km/h)
 8,Speed limit (120km/h)
-9,No passing
+9,No passing,refdouble.jpg
 10,No passing for vehicles over 3.5 metric tons
 11,Right-of-way at the next intersection
 12,Priority road
@@ -42,6 +42,6 @@ ClassId,SignName
 40,Roundabout mandatory
 41,End of no passing
 42,End of no passing by vehicles over 3.5 metric tons
-43, Speed limit (90km/h)
-44, Speed limit (110km/h)
-45, Speed limit (130km/h)
+43, Speed limit (90km/h),ref90.jpg
+44, Speed limit (110km/h),ref110.jpg
+45, Speed limit (130km/h),ref130.png

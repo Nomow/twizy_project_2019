@@ -8,19 +8,40 @@ import org.opencv.features2d.ORB;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 
+
 public class Main {  //in this class , we test the detection of panels in an image with ORB
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
 
 		//String testedImage = "00002_00023.ppm";
 
-		String testedImage = "p8.jpg";
-
-		Mat m = Imgcodecs.imread(testedImage);
 		
+		String testedImage = "p10.jpg";
+		
+		Mat p = Imgcodecs.imread(testedImage);
+		Mat pThresh = Biblio.thresholding(p);
+		HighGui.imshow("Thresh", pThresh);
+		HighGui.waitKey();
+		ArrayList<Mat> aLM = Biblio.getCircles(p,true);
+		for (Mat m:aLM) {
+			HighGui.imshow("coupe", m);
+			HighGui.waitKey();
+		}
+		
+		ArrayList<String[]> tabIndice = new ArrayList<String[]>();
+		tabIndice = Biblio.createTabIndice("C:\\Users\\alexa\\Desktop\\LEBONGIT\\twizy_project_2019\\signnames.csv");
+		ArrayList<String> s = Biblio.neuronesImage(p, tabIndice);
+		System.out.println("main");
+		for (String sr:s) {
+			System.out.println(sr);
+		}
+		
+	}
+	
+	/*
 		// Read all files in folders and subfolders of given paths and return an ArrayList of the files
 		Read_Panels RP = new Read_Panels("Database");
 		for (int i = 0; i < RP.getInputPanel().size(); i++) {
@@ -28,13 +49,13 @@ public class Main {  //in this class , we test the detection of panels in an ima
 			System.out.println(RP.getRealPanel().get(i));
 		}
 		// Useful when we want to feed our Neural Network
-		
 
-		
+
+
 		ArrayList<Mat> iBDDs = new ArrayList<Mat>();
 		ArrayList<Mat> listOfDescriptors = new ArrayList<Mat>();
 		ArrayList<String> refs = new ArrayList<String>();
-		
+
 		refs.add("ref110.jpg");refs.add("ref30.jpg");refs.add("ref50.jpg");refs.add("ref70.jpg");refs.add("ref90.jpg");
 		refs.add("refdouble.jpg");
 		ORB detector = ORB.create(30);
@@ -43,7 +64,7 @@ public class Main {  //in this class , we test the detection of panels in an ima
 			iBDDs.add(i);
 			MatOfKeyPoint keypoints = new MatOfKeyPoint();
 			Mat descriptors = new Mat();
-			
+
 			detector.detectAndCompute(i, new Mat(), keypoints, descriptors);
 			listOfDescriptors.add(descriptors);
 		}
@@ -52,10 +73,10 @@ public class Main {  //in this class , we test the detection of panels in an ima
 			System.out.println(s);
 			HighGui.imshow("we find in particular" , Imgcodecs.imread(s));
 			HighGui.waitKey(0);
-			
+
 		}
 		System.exit(0);
-		
-	}
+
+}*/
 
 }

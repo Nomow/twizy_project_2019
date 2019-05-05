@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -17,30 +18,29 @@ import javax.swing.JPanel;
 import org.opencv.core.Mat;
 import org.opencv.highgui.HighGui;
 
-public class OrbThread implements Runnable{
+public class NeuronalThread implements Runnable{
 	private Mat image;
-	private ArrayList<String> refs;
-	private ArrayList<Mat> iBDDs;
-	private ArrayList<Mat> listOfDescriptors;
+	
 	private JFrame frame;
 	private JPanel panel;
 	private Afficheur afficheur;
-	
+	ArrayList<String[]> tabIndice;
 
-	public OrbThread(Mat image, ArrayList<String> refs, ArrayList<Mat> iBDDs, ArrayList<Mat> listOfDescriptors,Afficheur afficheur) {
+	public NeuronalThread(Mat image,ArrayList<String[]> tabIndice , Afficheur afficheur) {
 		this.image=image.clone(); // l'image va etre modif
-		this.refs=refs;
-		this.iBDDs=iBDDs;
-		this.listOfDescriptors=listOfDescriptors;
 		this.afficheur=afficheur;
-
-		
-
+		this.tabIndice = tabIndice;
 
 	}
 	public void run() {
 
-		ArrayList<String> sL = Biblio.templateMatching(image,refs,iBDDs,listOfDescriptors,false);
+		ArrayList<String> sL = new ArrayList<String>();
+		try {
+			sL = Biblio.neuronesImage(image,tabIndice);
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		afficheur.send(sL);
 	
 		//for (String s : sL) System.out.println(s);
