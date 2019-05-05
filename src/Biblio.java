@@ -243,19 +243,11 @@ public class Biblio {
 
 
 	public static short decompositionAndSave(Mat imageFilmee ) throws IOException{
-
-		Mat hsv_image = Mat.zeros(imageFilmee.size(), imageFilmee.type());
-		Imgproc.cvtColor(imageFilmee, hsv_image,Imgproc.COLOR_BGR2HSV);
-		Mat threshold_img = Biblio.thresholding(hsv_image);
-		List<MatOfPoint> contours = Biblio.detectContours(threshold_img);
-
-
-		MatOfPoint2f moP2f = new MatOfPoint2f();
-		float[] radius = new float[1];
-		Point center = new Point();
+		
 		short i =0;
 		ArrayList<Mat> signs = getCircles(imageFilmee,true);
 		signs.addAll(getTriangles(imageFilmee,true));
+		signs.addAll(getOctogones(imageFilmee));
 		for (Mat sign:signs) {
 
 
@@ -322,7 +314,7 @@ public class Biblio {
 		writer2.write(""+Application.iTempFiles);
 		writer2.close();
 
-		ArrayList<String> pannelsFind = new ArrayList<String>();
+		
 		short i = decompositionAndSave(imageFilmee);
 
 		String pythonScriptPath = "Pytorch Folder\\pred.py";
@@ -396,10 +388,6 @@ public class Biblio {
 		float[] radius = new float[1];
 		Point center = new Point();
 
-
-
-
-
 		for (int c=0;c<contours.size();c++) {
 			MatOfPoint contour = contours.get(c);
 			double contourArea = Imgproc.contourArea(contour);
@@ -463,7 +451,6 @@ public class Biblio {
 		Mat threshold_img = Biblio.thresholding(image);
 		List<MatOfPoint> contours = Biblio.detectContours(threshold_img);
 		detectContoursByShape(contours,3,0.05);
-		MatOfPoint2f moP2f = new MatOfPoint2f();
 		for (MatOfPoint mOP:contours) {
 			Rect rect = Imgproc.boundingRect(mOP);
 			if (withMarge) {
@@ -486,6 +473,24 @@ public class Biblio {
 			}
 			//Imgproc.rectangle(image, new Point(rect.x-margex,rect.y-margey),new Point(rect.x+rect.width+margex,rect.y+rect.height+margey), new Scalar(0,255,0));
 			Mat tmp = image.submat(rect.y-margey,rect.y+rect.height+margey,rect.x-margex,rect.x+rect.width+margex); // decouper autour de chaque paneau
+			Mat sign = Mat.zeros(tmp.size(), tmp.type());
+			tmp.copyTo(sign);
+			signFind.add(sign);
+
+		}
+		return signFind;
+	}
+	
+	public static ArrayList<Mat> getOctogones(Mat image){
+		
+		ArrayList<Mat> signFind = new ArrayList<Mat>();
+		Mat threshold_img = Biblio.thresholding(image);
+		List<MatOfPoint> contours = Biblio.detectContours(threshold_img);
+		detectContoursByShape(contours,8,0.05);
+		for (MatOfPoint mOP:contours) {
+			Rect rect = Imgproc.boundingRect(mOP);
+			
+			Mat tmp = image.submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width); // decouper autour de chaque paneau
 			Mat sign = Mat.zeros(tmp.size(), tmp.type());
 			tmp.copyTo(sign);
 			signFind.add(sign);
