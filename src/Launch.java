@@ -16,16 +16,20 @@ public class Launch implements Runnable{
 	static final short ORBMODE = 1;
 	static final short NEURALMODE = 2;
 	static final short PROBABILISTICMODE = 3;
+	static final short VIDEOMODE = 1;
+	static final short CAMMODE = 2;
 	String videoName;
 	PanelVideo panel;
 	Afficheur panAff;
 	private short mode;
-	public Launch(String videoName,PanelVideo panel,Afficheur panAff,short mode) {
+	private short vidMode;
+	public Launch(String videoName,PanelVideo panel,Afficheur panAff,short mode,short vidMode) {
 		// TODO Auto-generated constructor stub
 		this.videoName=videoName;
 		this.panel=panel;
 		this.panAff=panAff;
 		this.mode = mode;
+		this.vidMode=vidMode;
 	}
 
 	@Override
@@ -63,9 +67,10 @@ public class Launch implements Runnable{
 			}
 		}
 		try {
-			VideoCapture cap = new VideoCapture(videoName);
-		
+			VideoCapture cap = new VideoCapture(0);
 			
+			if (vidMode == VIDEOMODE)
+				 cap= new VideoCapture(videoName);
 			int frameRate =(int) cap.get(5);
 			System.out.println("frameRate "+frameRate);
 			Mat img = new Mat();

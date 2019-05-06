@@ -27,6 +27,8 @@ import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
@@ -44,6 +46,13 @@ public class Application extends JFrame {
 	static String videoName;
 	static boolean debut =false;
 	static JButton  btnStart = new JButton("START");
+	static JComboBox comboBox;
+	private static short MODE = Launch.ORBMODE;
+	static String[] methode =  {"ORB METHODE","CNN METHODE","PARZAN METHODE"};
+	
+	static JComboBox comboBoxvid;
+	private static short VIDMODE = Launch.ORBMODE;
+	static String[] vid =  {"VIDEO","CAM"};
 ;
 	
 	/**
@@ -80,8 +89,8 @@ public class Application extends JFrame {
 					btnStart.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-
-								Launch L=new Launch(videoName,panel,panAff,Launch.NEURALMODE);
+								
+								Launch L=new Launch(videoName,panel,panAff,MODE,VIDMODE);
 								Thread T=new Thread(L);
 								T.start();
 								
@@ -89,7 +98,25 @@ public class Application extends JFrame {
 						
 					});
 					
-	
+					 comboBox.addActionListener(new ActionListener() {
+						    public void actionPerformed(ActionEvent e) {
+						        JComboBox cb = (JComboBox)e.getSource();
+						        MODE = (short) ( cb.getSelectedIndex()+1);
+						       
+						        	
+						        	
+						    }
+						});
+					 
+					 comboBoxvid.addActionListener(new ActionListener() {
+						    public void actionPerformed(ActionEvent e) {
+						        JComboBox cb = (JComboBox)e.getSource();
+						        VIDMODE = (short) ( cb.getSelectedIndex()+1);
+						       
+						        	
+						        	
+						    }
+						});
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -133,6 +160,14 @@ public class Application extends JFrame {
 		
 		btnStart.setBounds(18, 91, 99, 43);
 		contentPane.add(btnStart);
+		
+		comboBox = new JComboBox(methode);
+		comboBox.setBounds(177, 91, 158, 43);
+		contentPane.add(comboBox);
+		
+		comboBoxvid = new JComboBox(vid);
+		comboBoxvid.setBounds(400, 91, 158, 43);
+		contentPane.add(comboBoxvid);
 	
 	}
 	 public static BufferedImage scale(BufferedImage bImage, double factor) {
