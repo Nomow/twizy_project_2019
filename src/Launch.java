@@ -7,9 +7,13 @@ import javax.swing.JPanel;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfKeyPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.features2d.ORB;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
 public class Launch implements Runnable{
@@ -23,6 +27,7 @@ public class Launch implements Runnable{
 	Afficheur panAff;
 	private short mode;
 	private short vidMode;
+	private Matcher matcher;
 	public Launch(String videoName,PanelVideo panel,Afficheur panAff,short mode,short vidMode) {
 		// TODO Auto-generated constructor stub
 		this.videoName=videoName;
@@ -41,6 +46,7 @@ public class Launch implements Runnable{
 		ArrayList<Mat> iBDDs = new ArrayList<Mat>();
 		ArrayList<Mat> listOfDescriptors = new ArrayList<Mat>();
 		ArrayList<String[]> tabIndice = new ArrayList<String[]>();
+		
 		if (mode==ORBMODE) {
 		
 
@@ -56,10 +62,12 @@ public class Launch implements Runnable{
 			detector.detectAndCompute(i, new Mat(), keypoints, descriptors);
 			listOfDescriptors.add(descriptors);
 		}
+		
+		matcher = new OrbMatching(iBDDs,listOfDescriptors,refs,false);
 		}
 		if (mode==NEURALMODE) {
 			try {
-				tabIndice = Biblio.createTabIndice("C:\\Users\\alexa\\Desktop\\LEBONGIT\\twizy_project_2019\\Pytorch Folder\\signnames.csv");
+				matcher = new NeuralMatching("C:\\Users\\alexa\\Desktop\\LEBONGIT\\twizy_project_2019\\Pytorch Folder\\signnames.csv");
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -67,7 +75,7 @@ public class Launch implements Runnable{
 			}
 		}
 		try {
-			VideoCapture cap = new VideoCapture(0);
+			VideoCapture cap = new VideoCapture(0); //the webcam by default
 			
 			if (vidMode == VIDEOMODE)
 				 cap= new VideoCapture(videoName);
@@ -88,34 +96,36 @@ public class Launch implements Runnable{
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					//HighGui.imshow("img", img);
-					//HighGui.waitKey((int)((1.0/frameRate)*500));
 					
+					ArrayList<Rect> rectangles = matcher.getWherePanels();
+					for (Rect r:rectangles)
+						Imgproc.rectangle(img, new Point(r.x,r.y),new Point(r.x+r.width,r.y+r.height), new Scalar(0,255,0));
 					Image I= HighGui.toBufferedImage(img);
+					
+
 					
 			
 					
 					panel.refresh(I);
 				
-					//Thread the = new Thread(panel);
-					//the.start();
+					
 					
 					
 					i++;
+					MatcherThread mT = new MatcherThread(img,matcher,panAff);
 					if (mode==ORBMODE) {
-					if (i==frameRate) {
+					if (i==frameRate/10) {
 						i=0;
-						OrbThread oT = new OrbThread(img,refs,iBDDs,listOfDescriptors,panAff);
-						Thread th = new Thread(oT);
+						
+						Thread th = new Thread(mT);
 						th.start();
 						
 						
 					}}
 					else if (mode==NEURALMODE) {
-						if (i==frameRate) {
+						if (i==frameRate/2) {
 							i=0;
-							NeuronalThread nT = new NeuronalThread(img,tabIndice,panAff);
-							Thread thn = new Thread(nT);
+							Thread thn = new Thread(mT);
 							thn.start();
 						}
 					}

@@ -18,6 +18,7 @@ import time
 #import numpy
 #from fastai.vision import *
 #from fastai import *
+import sys
 from pathlib import Path
 from torchvision import transforms
 from PIL import Image
@@ -36,12 +37,15 @@ print("importcoupe3")
 
 
 print("testpywtf")
-fichier2 = open(r"C:\Users\alexa\Desktop\LEBONGIT\twizy_project_2019\TemporaryFiles\whenAreWe.txt", "r")
-iApp = fichier2.read()
-fichier2.close()  
-fichier3 = open(r"C:\Users\alexa\Desktop\LEBONGIT\twizy_project_2019\TemporaryFiles\howMany"+str(iApp)+".txt", "r")
-N = int(fichier3.read())
-fichier3.close()
+#fichier2 = open(r"C:\Users\alexa\Desktop\LEBONGIT\twizy_project_2019\TemporaryFiles\whenAreWe.txt", "r")
+#iApp = fichier2.read()
+#fichier2.close()  
+iApp = int( sys.argv[1] )
+
+#fichier3 = open(r"C:\Users\alexa\Desktop\LEBONGIT\twizy_project_2019\TemporaryFiles\howMany"+str(iApp)+".txt", "r")
+#N = int(fichier3.read())
+#fichier3.close()
+N = int(sys.argv[2])
 print(str(N)+"|"+str(iApp))
 
 
@@ -49,23 +53,22 @@ print(str(N)+"|"+str(iApp))
 
 
 
-#N=2
-#iApp=1
+#N=5
+#iApp=6
 result =[]
 
 
 for i in range(1,N+1):
     
-    #defaults.device = torch.device('cpu')
 
     img = open_image(r"C:\Users\alexa\Desktop\LEBONGIT\twizy_project_2019\temporaryFiles\tempIm"+str(iApp)+"s"+str(i)+".png")
     learn = load_learner(path =r"C:\Users\alexa\Desktop\LEBONGIT\twizy_project_2019\Pytorch Folder")
     pred_class,pred_idx,outputs = learn.predict(img)
-    print(pred_class)
+    print("pred"+str(iApp)+"|"+str(pred_class))
     result.append(str(pred_class))
     
 fichier = open(r"C:\Users\alexa\Desktop\LEBONGIT\twizy_project_2019\temporaryFiles\result"+str(iApp)+".txt", "w")
-    
+print("result"+str(iApp))
 for r in result:
     fichier.write(str(r)+"\n")
 
