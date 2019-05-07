@@ -81,32 +81,6 @@ public class Biblio {
 
 
 
-	public static void testPython(String path) throws IOException {
-		ArrayList<String> result = new ArrayList<String>();
-
-		String[] cmd = new String[2];
-		cmd[0] = "C:\\Users\\alexa\\AppData\\Local\\Programs\\Python\\Python37-32\\python"; //very dependant of the computer
-		cmd[1] = path;
-
-		// create runtime to execute external command
-		Runtime rt = Runtime.getRuntime();
-		Process pr = rt.exec(cmd);
-
-		// retrieve output from python script
-		BufferedReader bfr = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-		String line = "";
-		while((line = bfr.readLine()) != null) {
-			// display each output line form python script
-			System.out.println(line);
-
-
-
-		}
-
-
-	}
-
-
 
 
 	public static void detectContoursByShape(List<MatOfPoint> contours, int vertices, double accuracy){

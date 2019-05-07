@@ -55,7 +55,6 @@ public abstract class Matcher {
 					margex=marge;
 					margey=marge;
 				}
-				//Imgproc.rectangle(image, new Point(rect.x-margex,rect.y-margey),new Point(rect.x+rect.width+margex,rect.y+rect.height+margey), new Scalar(0,255,0));
 				Mat tmp = image.submat(rect.y-margey,rect.y+rect.height+margey,rect.x-margex,rect.x+rect.width+margex); // decouper autour de chaque paneau
 				Mat sign = Mat.zeros(tmp.size(), tmp.type());
 				tmp.copyTo(sign);
@@ -69,7 +68,7 @@ public abstract class Matcher {
 		return signFind;
 	}
 	
-	public static ArrayList<Mat> getTriangles(Mat image,boolean withMarge){
+	public ArrayList<Mat> getTriangles(Mat image,boolean withMarge){
 		int margex=0,margey=0;
 		ArrayList<Mat> signFind = new ArrayList<Mat>();
 		Mat threshold_img = Biblio.thresholding(image);
@@ -77,6 +76,7 @@ public abstract class Matcher {
 		Biblio.detectContoursByShape(contours,3,0.05);
 		for (MatOfPoint mOP:contours) {
 			Rect rect = Imgproc.boundingRect(mOP);
+			wherePanels.add(rect);
 			if (withMarge) {
 
 				int marge =(int)(0.25*rect.height);
@@ -104,7 +104,7 @@ public abstract class Matcher {
 		return signFind;
 	}
 
-	public static ArrayList<Mat> getOctogones(Mat image){
+	public ArrayList<Mat> getOctogones(Mat image){
 
 		ArrayList<Mat> signFind = new ArrayList<Mat>();
 		Mat threshold_img = Biblio.thresholding(image);
@@ -112,6 +112,7 @@ public abstract class Matcher {
 		Biblio.detectContoursByShape(contours,8,0.05);
 		for (MatOfPoint mOP:contours) {
 			Rect rect = Imgproc.boundingRect(mOP);
+			wherePanels.add(rect);
 
 			Mat tmp = image.submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width); // decouper autour de chaque paneau
 			Mat sign = Mat.zeros(tmp.size(), tmp.type());
