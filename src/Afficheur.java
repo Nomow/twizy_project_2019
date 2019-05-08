@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -24,14 +25,17 @@ public class Afficheur extends JPanel {
 	@Override 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.setColor(Color.BLUE);
+		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		//System.err.println("LUL");
 		int j=0;
 		int Long=this.getWidth()/4;
 		for (String x : sL) { 
 			System.err.println(x);
 			Image I=new ImageIcon(x).getImage();
-			j++;
+			
 			g.drawImage(I, 0, j*Long, this.getWidth()/4, this.getHeight()/4,null);
+			j++;
 		}
 
 
