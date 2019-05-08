@@ -27,10 +27,10 @@ ClassId,SignName,ref
 25,Road work
 26,Traffic signals
 27,Pedestrians
-28,Children crossing
-29,Bicycles crossing
-30,Beware of ice/snow
-31,Wild animals crossing
+28,Children crossing,refenfant.jpg
+29,Bicycles crossing,refvelo.jpg
+30,Beware of ice/snow,refneige.jpg
+31,Wild animals crossing,refanimal.png
 32,End of all speed and passing limits
 33,Turn right ahead
 34,Turn left ahead
