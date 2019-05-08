@@ -10,22 +10,22 @@ ClassId,SignName,ref
 8,Speed limit (120km/h)
 9,No passing,refdouble.jpg
 10,No passing for vehicles over 3.5 metric tons,refdoubletons.png
-11,Right-of-way at the next intersection
+11,Right-of-way at the next intersection,refprioponctuel.jpg
 12,Priority road
-13,Yield
-14,Stop
-15,No vehicles
-16,Vehicles over 3.5 metric tons prohibited
-17,No entry
+13,Yield,refceder.png
+14,Stop,refstop.jpg
+15,No vehicles,refcircuinter.jpg
+16,Vehicles over 3.5 metric tons prohibited,refpastons.png
+17,No entry,refsensinterdit.jpg
 18,General caution,refdanger.png
-19,Dangerous curve to the left
-20,Dangerous curve to the right
-21,Double curve
-22,Bumpy road
-23,Slippery road
+19,Dangerous curve to the left,refgauche.png
+20,Dangerous curve to the right,refdroite.png
+21,Double curve,refdoublevirage.png
+22,Bumpy road,refcassis.png
+23,Slippery road,refglissant.png
 24,Road narrows on the right
 25,Road work
-26,Traffic signals
+26,Traffic signals,reffeu.png
 27,Pedestrians
 28,Children crossing,refenfant.jpg
 29,Bicycles crossing,refvelo.jpg
