@@ -27,7 +27,7 @@ public class NeuralMatching extends Matcher{
 		short i =0;
 		ArrayList<Mat> signs = this.getCircles(imageFilmee,true);
 		signs.addAll(getTriangles(imageFilmee,true));
-		signs.addAll(getOctogones(imageFilmee));
+		signs.addAll(getOctogones(imageFilmee,true));
 		for (Mat sign:signs) {
 
 

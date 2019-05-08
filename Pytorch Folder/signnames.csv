@@ -1,4 +1,4 @@
-ClassId,SignName
+ClassId,SignName,ref
 0,Speed limit (20km/h)
 1,Speed limit (30km/h),ref30.jpg
 2,Speed limit (50km/h),ref50.jpg
